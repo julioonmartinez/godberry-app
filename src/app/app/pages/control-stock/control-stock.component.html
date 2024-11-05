@@ -1,0 +1,31 @@
+<div class="container-loading">
+    @if (loading) {
+        <p-progressBar mode="indeterminate" [style]="{height:'6px'}" ></p-progressBar>
+    }
+</div>
+<div class="container-page">
+
+    
+    <div class="content-list">
+        @if(weightList.length > 0){
+            @for (item of weightList ; track $index) {
+                <div class="item"> 
+                    <p class="title" >{{item.customer.name}}</p>
+                    <div class="section-2">
+                        <p>{{ 'Total: ' + item.netWeight + ' kg'}}</p>
+                    <p>{{'Total cajas: ' + item.totalBox }}</p>
+                    </div>
+                    <div class="actions-btns">
+                        <p-button (onClick)="deleteWeight(item.id!)" severity="danger" icon="pi pi-trash" iconPos="right" ></p-button>
+                    </div>
+                </div>
+    
+            }
+        }@else {
+            <div class="container-no-list">
+                <p>Parece ser no hay nada en el inventario.</p>
+                <p-button routerLink="/app/pesadas"  label="Agregar pesada" severity="primary" ></p-button>
+            </div>
+        }
+    </div>
+</div>

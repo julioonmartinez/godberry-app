@@ -32,7 +32,11 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/primeng/resources/themes/saga-orange/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css"
+            
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -103,5 +107,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "ce28b92b-aca6-493c-b89a-6e4c8fa48ed1"
   }
 }

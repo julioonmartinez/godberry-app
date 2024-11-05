@@ -1,0 +1,22 @@
+.container-avatar{
+    display: flex;
+    column-gap: 16px;
+    align-items: center;
+}
+.sidebar{
+    display: grid;
+    
+}
+
+.content-list{
+    margin-top: 24px;
+    display: grid;
+    row-gap: 16px;
+   
+    
+}
+
+.content-router{
+    background-color: #fafafa;
+    min-height: 100vh;
+}

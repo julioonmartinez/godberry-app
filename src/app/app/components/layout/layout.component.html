@@ -1,0 +1,31 @@
+<div class="content-router">
+    <p-sidebar class="sidebar" [(visible)]="sidebarVisible">
+        <ng-template pTemplate="header">
+            <div class="container-avatar">
+                <p-avatar 
+                    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" 
+                    shape="circle" />
+                <span class="font-bold">
+                    Amy Elsner
+                </span>
+            </div>
+        </ng-template>
+        <div class="content-list">
+            <p-button [style]="{width:'100%'}" routerLink="home" (onClick)="sidebarVisible = false" label="Home" icon="pi pi-home"   ></p-button>
+            <p-button [style]="{width:'100%'}" routerLink="control-stock" (onClick)="sidebarVisible = false"  label="Control Stock" icon="pi pi-home"   outlined="true"></p-button>
+            <p-button [style]="{width:'100%'}" routerLink="pesadas" (onClick)="sidebarVisible = false"  label="Pesada" icon="pi pi-home"  outlined="true"></p-button>
+
+        </div>
+    </p-sidebar>
+    <p-toolbar>
+        <div class="p-toolbar-group-start">
+            <p-button (onClick)="sidebarVisible = true" [text]="true" icon="pi pi-bars" [rounded]="true"  />
+    
+        </div>
+    </p-toolbar>
+    
+    
+        <router-outlet></router-outlet>
+    
+    
+</div>
