@@ -10,22 +10,46 @@
         @if(weightList.length > 0){
             @for (item of weightList ; track $index) {
                 <div class="item"> 
-                    <p class="title" >{{item.customer.name}}</p>
-                    <div class="section-2">
-                        <p>{{ 'Total: ' + item.netWeight + ' kg'}}</p>
-                    <p>{{'Total cajas: ' + item.totalBox }}</p>
+                   
+                    <div class="section-text">
+                        <p class="title" >{{item.customer.name}}</p>
+                       <div class="text-info">
+                        <p>{{ 'Peso neto: ' + (item.netWeight | number: '1.2-2') + ' kg'}}</p>
+                        <p>{{ 'Peso bruto: ' + (item.grossWeight |  number: '1.2-2') + ' kg'}}</p>
+
+                        <div class="container-box-type">
+                            <p>{{'Tara: ' + (item.tara | number: '1.2-2')}} </p>
+                            @for (box of item.typeBox; track $index) {
+                                <p> {{box.box.name}} + {{box.amount}} </p>
+                            }
+                       </div>
+                        <p>{{'Total cajas: ' + item.totalBox }}</p>
+                       
+
+                    </div>
                     </div>
                     <div class="actions-btns">
                         <p-button (onClick)="deleteWeight(item.id!)" severity="danger" icon="pi pi-trash" iconPos="right" ></p-button>
                     </div>
+                    <div class="content-progress-bar">
+                        @if(item.loading){
+                            <p-progressBar  mode="indeterminate" [style]="{height:'6px'}" ></p-progressBar>
+                        }
+                    </div>
                 </div>
     
             }
-        }@else {
-            <div class="container-no-list">
-                <p>Parece ser no hay nada en el inventario.</p>
-                <p-button routerLink="/app/pesadas"  label="Agregar pesada" severity="primary" ></p-button>
-            </div>
+        
         }
+
+        @if (weightList.length == 0 && loading == false) {
+            
+                <div class="container-no-list">
+                    <p>Parece ser no hay nada en el inventario.</p>
+                    <p-button routerLink="/app/pesadas"  label="Agregar pesada" severity="primary" ></p-button>
+                </div>
+            
+        }
+
     </div>
 </div>

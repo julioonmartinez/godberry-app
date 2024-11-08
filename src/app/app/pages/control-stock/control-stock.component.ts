@@ -8,18 +8,21 @@ import { ButtonModule } from 'primeng/button';
 import { error } from 'console';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RouterLink } from '@angular/router';
+type ResultsWeightsWithLoading = ResultsWeights & {
+  loading?: boolean;
+};
 
 
 @Component({
   selector: 'app-control-stock',
   standalone: true,
-  imports: [ RouterLink, CommonModule, ButtonModule, ProgressBarModule],
+  imports: [CommonModule, RouterLink, CommonModule, ButtonModule, ProgressBarModule],
   templateUrl: './control-stock.component.html',
   styleUrl: './control-stock.component.scss'
 })
 export class ControlStockComponent {
 
-  weightList: ResultsWeights[] = [];
+  weightList: ResultsWeightsWithLoading[] = [];
   loading: boolean = false;
 
   constructor(
@@ -35,26 +38,29 @@ export class ControlStockComponent {
       next:(data)=>{
         this.weightList = data;
         this.loading = false;
+        console.log(data)
       },
       error: (err)=>{
-        console.log(err)
+        
         this.loading = false;
       }
     });
   }
 
   deleteWeight(id:string){
-    console.log(id)
-    this.loading = true;
+    const weightRef = this.weightList.find(wei=> wei.id === id)
+    if(weightRef){
+      weightRef.loading = true;
+    }
     this.weightServices.deleteWeight(id).subscribe({
       next:(result)=>{
-        console.log(result)
+       
         this.weightList = this.weightList.filter(we=> we.id != id );
         this.loading = false;
 
       },
       error:(err)=>{
-        console.log(err);
+        
         this.loading = false;
       }
     })

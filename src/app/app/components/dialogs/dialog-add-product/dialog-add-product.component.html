@@ -1,0 +1,58 @@
+
+<p-dialog header="Agrega un producto" [modal]="true" [(visible)]="visible" [style]="{ margin: '12xp' }" (onHide)="closeDialog()" >
+    <span class="p-text-secondary block mb-5 mt-2">Completa el formulario.</span>
+    
+   <form [formGroup]="myForm!" action="">
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="sender" class="font-semibold w-6rem">Para:</label>
+        <p-autoComplete 
+       
+        [suggestions]="filteredCustomersAdress"
+        (completeMethod)="searchAdress($event)"
+        field="name"
+        [forceSelection]="true"
+        formControlName="clientAdress"
+        placeholder="Elige un cliente"></p-autoComplete>  
+    </div>
+
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="adress" class="font-semibold w-6rem">De:</label>
+        <p-autoComplete 
+       
+        [suggestions]="filteredCustomersSender"
+        (completeMethod)="searchSender($event)"
+        field="name"
+        [forceSelection]="true"
+        formControlName="clientSender"
+        placeholder="Elige un cliente"></p-autoComplete>  
+    </div>
+
+   
+   
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="amount" class="font-semibold w-6rem" >Cantidad:</label>
+        <p-inputNumber 
+            formControlName="amount"
+            inputId="amount"
+           
+        ></p-inputNumber>
+    </div>
+
+    <div class="flex align-items-center gap-3 mb-3">
+        <label for="sender" class="font-semibold w-6rem">Producto:</label>
+        <p-autoComplete 
+        
+        [suggestions]="filteredCProducts"
+        (completeMethod)="searchProduct($event)"
+        field="genericName"
+        [forceSelection]="true"
+        formControlName="product"
+        placeholder="Elige un producto"></p-autoComplete>  
+    </div>
+   </form>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
+        <p-button label="Save" (onClick)="onAddProduct()" />
+    </div>
+</p-dialog>
+<p-toast position="top-center" ></p-toast>

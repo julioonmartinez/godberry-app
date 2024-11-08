@@ -1,0 +1,35 @@
+$yellow-color: #FFC107;
+$dark-gray: #333;
+$light-gray: #f4f4f4;
+$border-radius: 8px;
+$input-padding: 12px;
+
+.content-fields-type-box{
+    display: grid;
+    margin-bottom: 24px;
+    row-gap: 16px;
+    .content-icon{
+        display: flex;
+        justify-content: flex-end;
+        padding: 12px;
+        column-gap: 8px;
+        align-items: center;
+        color: $dark-gray;
+        .titlebtn{
+            margin: 0;
+        }
+    }
+}
+
+
+.content-field{
+    display: grid;
+    row-gap: 12px;
+    padding: 12px;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: $border-radius;
+    .content-input{
+        display: flex;
+        column-gap: 12px;
+    }
+}

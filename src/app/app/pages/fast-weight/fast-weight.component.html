@@ -1,0 +1,72 @@
+
+<div class="content-progress-bar">
+@if (loading) {
+  <p-progressBar mode="indeterminate" [style]="{height: '6px'}" ></p-progressBar>
+}
+</div>
+@if(!loadingSave){
+  <div class="page-fast-weight">
+    <div class="calculator">
+      <div class="display">
+        <div class="total-content">
+            @if (total != 0) {
+                <p class="total" >{{total}}</p>
+            }
+        </div>
+        <p class="list-nums" >
+                @for (weight of listWeight; track $index) {
+                    <span class="item" >{{weight}}
+                    @if (listWeight.length > 0) {
+                        <span>{{', '}} </span>
+                    }    
+                    </span>
+                }   
+        </p>
+        <p class="current-num" >
+            @if(currentInput == ''){
+                <span class="currenZero" >0</span>
+               }@else {
+                <span>{{currentInput}}</span>
+               }    
+        </p>
+      </div>
+      <div class="content-actions">
+        <button pButton severity="secondary" label="Borrar" (click)="clear()"></button>
+        <button (click)="openDialogSaveResult()"  pButton label="Guardar" ></button>
+        <button (click)="openBoxList()"  pButton label="Cajas" ></button>
+      </div>
+    <div class="content-keys">
+      <div class="keys no-zoom ">
+        <button class="key" (click)="input('7')">7</button>
+        <button class="key" (click)="input('8')">8</button>
+        <button class="key" (click)="input('9')">9</button>
+        <button class="key" (click)="input('4')">4</button>
+        <button class="key" (click)="input('5')">5</button>
+        <button class="key" (click)="input('6')">6</button>
+        <!-- <button class="key operator" (click)="input('-')">-</button> -->
+  
+        <button class="key" (click)="input('1')">1</button>
+        <button class="key" (click)="input('2')">2</button>
+        <button class="key" (click)="input('3')">3</button>
+        <!-- <button class="key operator" (click)="input('*')">*</button> -->
+  
+        <button class="key" (click)="input('0')">0</button>
+        <button class="key" (click)="input('.')">.</button>
+        <!-- <button class="operator operator-equals" (click)="calculate()">=</button> -->
+        <!-- <button class="key operator" (click)="input('/')">/</button> -->
+      </div>
+      <div class="content-key-plus">
+        <button class="key-plus operator" (click)="input('+')">+</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <app-dialog-result-weight [results]="resultWeigth" (visibleChange)="cancelSaveResult()" [visible]="visibleDialogSaveResult" (save)="saveResult($event)" ></app-dialog-result-weight>
+  <app-dialog-save-result-weight (visibleChange)="cancelBoxList()" [visible]="visible" (save)="saveConfiguration($event)" ></app-dialog-save-result-weight>
+}@else {
+  <div class="content-loading">
+    <p-progressSpinner class="progress" ariaLabel="loading" />
+    <p class="text" >Estamos guardado el resultado, por favor espera...</p>
+  </div>
+}
+  <p-toast/>

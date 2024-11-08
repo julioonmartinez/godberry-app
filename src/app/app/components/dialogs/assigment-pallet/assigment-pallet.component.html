@@ -1,0 +1,19 @@
+<p-dialog (onHide)="closeDialog()" [visible]="visible" header="Asigna la tarima" [modal]="true" [style]="{margin:'12px'}" >
+    <span class="p-text-secondary block mb-5 mt-2">Asigna la tarima</span>
+
+    <form class="form" [formGroup]="myForm" >
+        <div class="content-field">
+            <label for="numberPallet">Número</label>
+            <p-inputNumber 
+                inputId="numberPallet"
+                formControlName="numberPallet"
+             ></p-inputNumber>
+        </div>
+
+    </form>
+    <div class="action-button">
+        <p-button (onClick)="closeDialog()" severity="secondary" [text]="true" label="Cancelar" ></p-button>
+        <p-button (onClick)="save()" severity="primary" [style]="{color: 'white'}" label="Guardar" ></p-button>
+    </div>
+
+</p-dialog>

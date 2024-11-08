@@ -1,0 +1,112 @@
+$yellow-color: #FFC107;
+$dark-gray: #333;
+$light-gray: #f4f4f4;
+$border-radius: 8px;
+$input-padding: 12px;
+.content-page-cooler{
+    padding: 12px;
+}
+.section-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-cooler{
+    margin-top: 32px;
+    display: grid;
+    row-gap: 16px;
+
+}
+.pallet{
+    padding: 12px 16px;
+    border: 1px solid rgb(223, 223, 223);
+    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius:$border-radius ;
+    background-color: white;
+    display: grid;
+    row-gap: 16px;
+    p{
+        margin: 0;
+    }
+    .header-pallet{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .content-info-pallet{
+            display: flex;
+            column-gap: 12px;
+            align-items: center;
+            .title{
+                font-size: 1rem;
+                color: $dark-gray;
+                font-weight: 600;
+            }
+            .pi{
+                // color: red;
+                color: #bfbfbf;
+            }
+            .pi.async{
+                color: rgb(0, 219, 0);
+            }
+
+        }
+        
+        .content-actions{
+            display: flex;
+            column-gap: 8px;
+            align-items: center;
+        }
+    }
+    .content-table-pallet{
+        display: grid;
+        // grid-template-columns: repeat(4,1fr);
+        .header-table{
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            margin-bottom: 12px;
+            text-align: center;
+            p{
+                font-size: 1rem;
+                font-weight: 500;
+                color: $dark-gray;
+            }
+        }
+        .row-table{
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            row-gap: 8px;
+            text-align: center;
+            align-items: center;
+            // border: 1px solid $dark-gray;
+            margin-bottom: 16px;
+           .row{
+                color: $dark-gray;
+            margin-right: 8px;
+            font-size: calc(0.7rem + 1vw);   
+           }
+           .content-action{
+            display: flex;
+            justify-content: flex-end;
+
+           }
+        }
+    }
+    .content-no-list-products{
+        display: grid;
+        place-content: center;
+        // justify-content: center;
+        // align-items: center;
+        padding: 24px;
+        min-height: 60px;
+        row-gap: 20px;
+        i{
+            justify-content: center;
+            justify-self: center;
+            color: $dark-gray;
+        }
+        p{
+            color: $dark-gray;
+        }
+    }
+}

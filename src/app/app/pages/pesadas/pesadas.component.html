@@ -113,8 +113,10 @@
   
 
 
-<div class="container-last-actions">
-    <p-button severity="secondary" label="Borrar lista" ></p-button>
-
-</div>
+@if (listOfWeighing.length > 0) {
+    <div class="container-last-actions">
+        <p-button (onClick)="clearLocalSotarge()" severity="secondary" label="Borrar lista" ></p-button>
+    
+    </div>
+}
 <p-toast></p-toast>

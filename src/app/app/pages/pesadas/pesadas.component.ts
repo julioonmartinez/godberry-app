@@ -21,6 +21,7 @@ import { Customer } from '../../../shared/interfaces/customer';
 import { CLIENTS } from '../../../shared/enums/custom.enum';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { TYPEBOX } from '../../../shared/enums/typebox.enum';
 
 interface Column {
   field: string;
@@ -47,12 +48,7 @@ export class PesadasComponent {
   dialogSaveResult: boolean = false;
   nameCustomer: Customer | null =  null ;
 
-  boxList: TypeBox[]= [
-    { id:'01', name:'Tijuana', tara:1.3},
-    {id:'02', name:'Naranja', tara:1.6},
-    {id:'03', name:'Mediana', tara:1.4},
-    {id:'04', name:'otra', tara:0},
-  ]
+  boxList: TypeBox[]=  TYPEBOX;
   listOfWeighing:Pesadas[] = [];
 
   cols: Column[] = [
@@ -77,6 +73,7 @@ export class PesadasComponent {
     netWeight:0,
     tara: 0,
     grossWeight:0,
+    typeBox:[],
   };
 
   customers: Customer[] = CLIENTS;
@@ -171,17 +168,36 @@ export class PesadasComponent {
     
   }
 
-  calculateWeight(){
-
+  calculateWeight(newWeight?: Pesadas){
     this.totalBox = this.listOfWeighing.reduce((acc, wei) => acc + Number(wei.amountBox), 0);
-    this.totalWeight = this.listOfWeighing.reduce((acc, wei)=> wei.netWeight + acc, 0 )
-
+    this.totalWeight = this.listOfWeighing.reduce((acc, wei)=> wei.netWeight + acc, 0 );
     this.weightResult.totalBox = this.listOfWeighing.reduce((acc, wei) => acc + Number(wei.amountBox), 0);
     this.weightResult.grossWeight = this.listOfWeighing.reduce((acc, wei)=> wei.grossWeight + acc, 0 );
     this.weightResult.tara = this.listOfWeighing.reduce((acc, wei)=> wei.tara + acc, 0 );
-    this.weightResult.netWeight = this.listOfWeighing.reduce((acc, wei)=> wei.netWeight + acc, 0 )
-    
-    console.log(this.weightResult)
+    this.weightResult.netWeight = this.listOfWeighing.reduce((acc, wei)=> wei.netWeight + acc, 0 );
+    // If a new weight is provided, update or add it in typeBox
+    if(newWeight){
+      const boxRer = this.weightResult.typeBox?.find(box=> box.box.id == newWeight.boxType.id);
+      if(boxRer){
+        console.log(newWeight.amountBox, boxRer.amount)
+        boxRer.amount += newWeight.amountBox
+      }else{
+        this.weightResult.typeBox?.push({amount: newWeight.amountBox, box: newWeight.boxType, tara: newWeight.tara})
+      }
+      // If no new weight is provided, recalculate typeBox for the entire list
+    }else{
+      this.listOfWeighing.forEach(wei=> {
+        const boxRer = this.weightResult.typeBox?.find(box=> box.box.id == wei.boxType.id);
+        if(boxRer){
+          console.log(wei.amountBox, boxRer.amount)
+          boxRer.amount += wei.amountBox
+        }else{
+          console.log(wei.amountBox)
+          this.weightResult.typeBox?.push({amount: wei.amountBox, box: wei.boxType, tara: wei.tara})
+        }
+      })
+    }
+    console.log(this.weightResult);
   }
 
   buildForms(){
@@ -201,13 +217,13 @@ export class PesadasComponent {
       if (listaEnString) {
         this.listOfWeighing = JSON.parse(listaEnString);
         console.log(this.listOfWeighing)
-        this.calculateWeight()
+        this.calculateWeight();
       }else{
         this.showDialog();
       }
   }
 
-  clearLOcalSotarge(){
+  clearLocalSotarge(){
     localStorage.removeItem('weightList')
     this.listOfWeighing = []
   }
@@ -227,7 +243,7 @@ export class PesadasComponent {
           this.openMessageExit('Haz agregado exitosamente una resultado.', 'Pesada agregada')
           setTimeout(()=>{
             this.loading = false;
-            this.clearLOcalSotarge();
+            this.clearLocalSotarge();
           this.router.navigateByUrl('/app')
           }, 500)
         },
@@ -266,6 +282,7 @@ export class PesadasComponent {
     console.log()
 
     this.listOfWeighing = [...this.listOfWeighing, weigh]
+    this.calculateWeight(weigh)
     
     this.buildForms();
     this.saveWeightLocalStoarge();
@@ -284,7 +301,7 @@ export class PesadasComponent {
   saveWeightLocalStoarge(){
     const listWeigth = JSON.stringify(this.listOfWeighing)
     localStorage.setItem('weightList', listWeigth )
-    this.calculateWeight()
+    
   }
 
 }

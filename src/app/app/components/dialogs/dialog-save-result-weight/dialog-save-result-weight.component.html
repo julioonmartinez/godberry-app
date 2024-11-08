@@ -1,1 +1,53 @@
-<p>dialog-save-result-weight works!</p>
+<p-dialog header="Configuración" [modal]="true" [(visible)]="visible" [style]="{ width: '100%', margin: '16px' }">
+    <span class="p-text-secondary block mb-5 mt-3">Elige el cliente y la cantidad de cajas.</span>
+    <div class="flex align-items-center gap-3 mb-5">
+        <label for="integeronly" class="font-semibold w-6rem">Cliente:</label>
+        <p-autoComplete 
+                [(ngModel)]="nameCustomer"
+                [suggestions]="filteredCustomers"
+                (completeMethod)="search($event)"
+                field="name"
+                [forceSelection]="true"
+                placeholder="Elige un cliente"></p-autoComplete>
+
+    </div>
+
+    <div class="content-fields-type-box">
+       <div class="content-icon">
+        <p class="titlebtn" >Agregar otra caja</p>
+        <p-button (onClick)="addBoxList()"  icon="pi pi-plus" />
+       </div>
+      @for (box of optionDrop; track $index) {
+        <div class=" content-field">
+            <div class="content-input align-items-center">
+                <label for="typeBox" class="font-semibold w-6rem">Caja</label>
+            <p-dropdown 
+            class="flex-auto"
+            [options]="boxList" 
+            [(ngModel)]="box.boxID" 
+            optionLabel="name" 
+            placeholder="Tipo de caja"
+            optionValue="id" 
+            [style]="{width:'100%'}"
+           
+            />
+            </div>
+            <div class="content-input align-items-center">
+                <label for="amountBox" class="font-semibold w-6rem" >Cantidad </label>
+                <p-inputNumber
+                    inputId="amountBox"
+                    [(ngModel)]="box.amount"
+                
+                />
+                
+            </div>
+           </div>
+      }
+       
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="cancel()" />
+        <p-button label="Guardar" (onClick)="saveConfiguration()" />
+    </div>
+</p-dialog>
+

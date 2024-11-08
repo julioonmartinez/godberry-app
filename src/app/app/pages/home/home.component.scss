@@ -1,0 +1,42 @@
+$yellow-color: #FFC107;
+$dark-gray: #333;
+$light-gray: #f4f4f4;
+$border-radius: 8px;
+$input-padding: 12px;
+
+.content-page-home{
+    padding: 16px;
+}
+
+.list-options{
+    max-width: 400px;
+    .item{
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 16px;
+        padding: 12px 16px;
+        background-color: white;
+        // border-radius:  ;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: $border-radius;
+        cursor: pointer;
+        .content-icon{
+            display: grid;
+            place-content: center;
+            .icon{
+                color: $dark-gray;
+                font-size: 1.2rem;
+            }
+            
+            
+        }
+        .content-title-text{
+            .name-btn{
+                color: $dark-gray;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+        }
+        
+    }
+}

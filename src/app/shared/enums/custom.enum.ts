@@ -1,6 +1,5 @@
 import { Customer } from "../interfaces/customer";
 
-
 export const CLIENTS: Customer[] = [
   { id: '00', name: 'noName', type: 'both', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
   { id: '0', name: 'Otro', type: 'both', email: 'juan.gonzalez@example.com', phone: '123-456-7890' },
@@ -90,6 +89,7 @@ export const CLIENTS: Customer[] = [
     { id: '84', name: 'Manuel Zamora', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '85', name: 'Miriam Solis', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '86', name: 'Proveedor Minijabas', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '87', name: 'Edgar Oregel', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
 
 
 

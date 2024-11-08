@@ -1,0 +1,104 @@
+<div class="content-page-cooler ">
+    <section class="section-header" >
+        <!-- <p class="title-page" >Hola</p> -->
+        <p-button label="Sincronizar" icon="pi pi-sync" [style]="{color: 'white'}" severity="secondary" ></p-button>
+        <p-button (onClick)="quicklyAddNewPallet()" label="Tarima" icon="pi pi-plus" size="large" [style]="{color: 'white' }" severity="primary" ></p-button>
+    </section>
+    @if(palletList.length > 0){
+        <section class="list-cooler" >
+            @for (pallet of palletList; track $index) {
+                <div class="pallet">
+                    <div class="header-pallet">
+                        <div class="content-info-pallet">
+                            <i 
+                                class="pi pi-sync"
+                                style="font-size: 1rem"
+                                [ngClass]="{'async': pallet.id }"
+                                ></i>
+                            <p class="title" > {{pallet.numberPallet == undefined ? 'Tarima sin asignar' : 'Tarima: ' + pallet.numberPallet}} </p>
+                        </div>
+                        <div class="content-actions">
+                            <p-button (onClick)="openDialogProduct(pallet.idCrypto! )" label="Product" icon="pi pi-plus" [style]="{color: 'white' }"  size="small" severity="secondary"   ></p-button>
+                            <div class="card flex justify-content-center">
+                                <p-overlayPanel #menu (onShow)="currentPalletId = pallet.idCrypto">
+                                    <p-button 
+                                        icon="pi pi-pencil" 
+                                        [text]="true"
+                                        severity="secondary"
+                                        size="small"
+                                        (click)="assigmentPallet(pallet.idCrypto!, pallet.numberPallet); menu.hide()">
+                                    </p-button>
+                                    <p-button 
+                                        icon="pi pi-trash" 
+                                        [text]="true"
+                                        severity="danger"
+                                        size="small"
+                                        (click)="deletePallet(currentPalletId!); menu.hide()">
+                                    </p-button>
+                                   
+                                  </p-overlayPanel>
+                                <p-button (onClick)="menu.toggle($event)" severity="secondary" size="small" [text]="true" icon="pi pi-ellipsis-v"/>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="content-table-pallet">
+                       @if ((pallet.receptionProducts ?? []).length  > 0) {
+                        <div class="table">
+                            <div class="header-table">
+                                <!-- <p>No.</p> -->
+                                <p>Para:</p>
+                                <p>De:</p>
+                                <p>#</p>
+                                <p>Fruta</p>
+                                <p></p>
+                            </div>
+                            @for (product of pallet.receptionProducts; track $index) {
+                                <div class="row-table">
+                                    <p class="row">{{product.clientAdress.name }}</p>
+                                    <p class="row">{{product.clientSender.name }}</p>
+                                    <p class="row">{{product.amount}}</p>
+                                    <p class="row" >{{product.product.genericName}}</p>
+                                    <div class="content-action">
+                                        <p-button severity="danger" size="small" [text]="true" icon="pi pi-trash" (onClick)="deleteProduct(pallet.idCrypto!, product.idCrypto!)" ></p-button>
+                                    <p-button size="small" icon="pi pi-pencil" [text]="true"  (onClick)="openDialogProduct(pallet.idCrypto!,product )" ></p-button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                       }@else {
+                       <div class="content-no-list-products">
+
+                        <i class="pi pi-exclamation-circle" style="font-size: 1.6rem"></i>
+                        <p>No hay productos en la tarima.</p>
+
+                       </div>
+                       }
+                    </div>
+
+                </div>
+            }
+
+        
+
+        </section>
+    }@else {
+        <app-no-list [warningText]="warningText" ></app-no-list>
+    }
+</div>
+
+
+
+@if(dialogAddProduct){
+    <app-dialog-add-product 
+    [visible]="dialogAddProduct" 
+    (changeVisible)="closeDialogProduct()"
+    (onHide)="closeDialogProduct()"
+    (addProduct)="addProductOfPallet($event, idCryptoPalletSelect!)"
+    [editProduct]="editProduct()"
+></app-dialog-add-product>
+
+}
+
+<app-assigment-pallet (savePallet)="saveAssigmentPallet($event)" (changeVisible)="closeDialogAssimentPallet()" [visible]="dialogAssigmentPallet" ></app-assigment-pallet>
+
+<p-toast position="top-center" />

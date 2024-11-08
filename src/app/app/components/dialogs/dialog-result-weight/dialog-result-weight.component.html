@@ -1,0 +1,30 @@
+<p-dialog header="Confirmación" [modal]="true" [(visible)]="visible" >
+    <span class="p-text-secondary block mb-5 mt-3" >Revisa los datos y dale a guardar</span>
+    <div class="content-results">
+@if (results) {
+    <div class="content-item">
+           <p class="name" >{{results.customer.name}}</p>
+           <p class="gross" >Bruto: {{results.grossWeight | number:'1.2-2' }} kg</p>
+           <p class="tara" >Tara:{{results.tara | number:'1.2-2' }}</p>
+           <p class="net" >Neto: {{results.netWeight | number:'1.2-2' }} </p>
+           <div class="content-list-box">
+            <p class="title-list-box" >Tipo de cajas:</p>
+            @for (box of results.typeBox; track $index) {
+                <p class="box" > {{box.amount}}--{{box.box.name}} - {{box.box.tara}} </p>
+            }
+           </div>
+    </div>
+}@else {
+    <div>
+        <p>No hay resultados que mostrar</p>
+    </div>
+}
+<div class="flex justify-content-end gap-2">
+    <p-button label="Cancel" severity="secondary" (onClick)="cancel()" />
+    @if (results) {
+        <p-button label="Guardar" (onClick)="saveConfiguration()" />
+    }
+</div>
+
+    </div>
+</p-dialog>
