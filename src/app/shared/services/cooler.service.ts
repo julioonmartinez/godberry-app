@@ -8,7 +8,7 @@ import { Pallets } from '../interfaces/pallets';
 })
 export class CoolerService {
 
-  private apiUrl = ''
+  private apiUrl = 'https://api-bjbbbu645q-uc.a.run.app/api';
 
   
 
@@ -18,7 +18,25 @@ export class CoolerService {
 
 
   addPallet(pallet:Pallets):Observable<any> {
-    pallet.createAt = new Date()
-  return this.http.post(`${this.apiUrl}`, pallet);
+    pallet.date = new Date()
+  return this.http.post(`${this.apiUrl}/addPallet`, pallet);
   }
+
+  updatePallet(idPallet:string, palletUpdate:Pallets,):Observable<any> {
+    return this.http.put(`${this.apiUrl}/updatePallet/${idPallet}`, palletUpdate )
+  }
+
+  deletePallet(idPallet:string):Observable<any>{
+    return this.http.delete(`${this.apiUrl}/deletePallet/${idPallet}`)
+  }
+
+
+
+ 
+  getPalletsInCooler(): Observable<Pallets[]> {
+    return this.http.get<Pallets[]>(`${this.apiUrl}/getPallets`, {
+      params: { status: 'Cooler' }
+    });
+  }
+  
 }

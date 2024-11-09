@@ -1,8 +1,14 @@
+
 $yellow-color: #FFC107;
 $dark-gray: #333;
 $light-gray: #f4f4f4;
 $border-radius: 8px;
 $input-padding: 12px;
+$border-color: rgb(223, 223, 223);
+
+.content-progress-bar{
+    height: 6px;
+}
 .content-page-cooler{
     padding: 12px;
 }
@@ -20,7 +26,7 @@ $input-padding: 12px;
 }
 .pallet{
     padding: 12px 16px;
-    border: 1px solid rgb(223, 223, 223);
+    border: 1px solid $border-color;
     // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius:$border-radius ;
     background-color: white;
@@ -43,8 +49,8 @@ $input-padding: 12px;
                 font-weight: 600;
             }
             .pi{
-                // color: red;
-                color: #bfbfbf;
+                
+                color: $border-color;
             }
             .pi.async{
                 color: rgb(0, 219, 0);

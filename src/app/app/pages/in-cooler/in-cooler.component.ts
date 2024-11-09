@@ -14,32 +14,34 @@ import { MenuModule } from 'primeng/menu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { AssigmentPalletComponent } from "../../components/dialogs/assigment-pallet/assigment-pallet.component";
 import { CommonModule } from '@angular/common';
+import { CoolerService } from '../../../shared/services/cooler.service';
+import { lastValueFrom } from 'rxjs';
 
 
 @Component({
   selector: 'app-in-cooler',
   standalone: true,
-  imports: [CommonModule, AssigmentPalletComponent, OverlayPanelModule, MenuModule, ToastModule, DialogAddProductComponent, DialogModule, NoListComponent, ButtonModule, ProgressBarModule, ProgressSpinnerModule, DialogAddProductComponent, AssigmentPalletComponent],
+  imports: [ProgressBarModule, ProgressSpinnerModule, CommonModule, AssigmentPalletComponent, OverlayPanelModule, MenuModule, ToastModule, DialogAddProductComponent, DialogModule, NoListComponent, ButtonModule, ProgressBarModule, ProgressSpinnerModule, DialogAddProductComponent, AssigmentPalletComponent],
   templateUrl: './in-cooler.component.html',
   styleUrl: './in-cooler.component.scss',
   providers:[MessageService]
 })
 export class InCoolerComponent {
+  loading: boolean = false;
+  disabledButtons: boolean = false;
 
   dialogAddProduct: boolean = false;
   dialogAssigmentPallet: boolean = false;
 
   currentPalletId: string | undefined;
-
-
-
- 
+  deletePalletList:Pallets[] = []; 
   palletList:Pallets[] = []
   warningText:Signal<string> = signal('No hay pallets aún.')
 
   idAssigmentPallet: string | undefined = undefined;
   numerPalletAsigment = signal<number | undefined>(undefined);
   nameLocalStoragePalletItem: string = 'palletList';
+  nameLocalStorageDeletePalletList: string = 'palletListDeleted'
   idCryptoPalletSelect: string | null = null;
   
   editProduct = signal<ReceptionProduct | undefined>(undefined);
@@ -59,10 +61,42 @@ export class InCoolerComponent {
 
   constructor(
     private messageService : MessageService,
+    private coolerService : CoolerService,
 
   ){
-    this.getLocalStorage();
+    this.getPalletsDataBase();
+    
   }
+
+  getPalletsDataBase() {
+    this.getLocalStorage();
+    this.coolerService.getPalletsInCooler().subscribe({
+      next: (data) => {
+        console.log('data', data);
+        data.forEach(pallet => {
+          const index = this.palletList.findIndex(pll => pll.idCrypto === pallet.idCrypto);
+          if (index !== -1) {
+            this.palletList[index] = pallet;
+          }
+        });
+        this.palletList.forEach(pallet=>{
+          const index = data.findIndex(pll => pll.idCrypto === pallet.idCrypto);
+          if(index !== -1){
+
+          }else{
+            pallet.sync = false;
+            pallet.id = undefined;
+            console.log(this.palletList)
+          }
+        })
+        this.savePalletLocalStorage();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+  
 
 
   openDialogProduct(idCryptoPallet:string, editProduct?: ReceptionProduct){
@@ -90,6 +124,32 @@ export class InCoolerComponent {
     
   }
 
+  asynPallets(){
+    this.coolerService.getPalletsInCooler().subscribe({
+      next:(data)=>{
+        console.log('data', data)
+        data.forEach(pallet=>{
+          console.log(pallet)
+          let palletRef = this.palletList.find(pll=> pll.idCrypto === pallet.idCrypto );
+          if(palletRef){
+            palletRef = pallet
+          }else{
+            this.palletList.push(pallet)
+          }
+          
+        })
+
+        console.log('list', this.palletList)
+      },
+      error:(err)=>{
+        console.log(err)
+
+      }
+    })
+
+    this.savePalletLocalStorage();
+  }
+
   saveAssigmentPallet(event: number){
     console.log(event)
     if(this.idAssigmentPallet){
@@ -111,9 +171,11 @@ export class InCoolerComponent {
   quicklyAddNewPallet(){
     const newPallet: Pallets = {
       idCrypto: crypto.randomUUID(),
-      createAt: new Date(),
+      status: 'Cooler',
+      date: new Date(),
+      sync: false,
     }
-    this.palletList.push(newPallet);
+    this.palletList.unshift(newPallet);
     console.log(this.palletList)
     this.savePalletLocalStorage()
   }
@@ -138,17 +200,24 @@ export class InCoolerComponent {
 }
   getLocalStorage(){
     const pallets = localStorage.getItem(this.nameLocalStoragePalletItem);
+    const palletsDeleted = localStorage.getItem(this.nameLocalStorageDeletePalletList);
     if(pallets){
-      this.palletList = JSON.parse(pallets)
+      this.palletList = JSON.parse(pallets);
     }
+    if(palletsDeleted){
+      this.deletePalletList = JSON.parse(palletsDeleted);
+      console.log(this.deletePalletList)
+    }
+
+    console.log(this.palletList)
   }
   savePalletLocalStorage(){
-    localStorage.setItem(this.nameLocalStoragePalletItem, JSON.stringify(this.palletList) )
+    localStorage.setItem(this.nameLocalStoragePalletItem, JSON.stringify(this.palletList) );
+    localStorage.setItem(this.nameLocalStorageDeletePalletList, JSON.stringify(this.deletePalletList))
    }
 
    deleteProduct(idPallet:string, idProduct:string){
     const palletRef = this.palletList.find(pallet=> pallet.idCrypto == idPallet);
-
     if(palletRef){
       palletRef.receptionProducts = palletRef.receptionProducts?.filter(pro=> pro.idCrypto != idProduct)
       this.messageExit('Mensaje', 'Haz borrado una entrada')
@@ -160,11 +229,17 @@ export class InCoolerComponent {
 
    deletePallet(idCryptoPallet:string){
 
-    console.log(this.palletList)
-    console.log(idCryptoPallet)
-    this.palletList = this.palletList.filter(pallet=> pallet.idCrypto != idCryptoPallet);
-    this.messageExit('Mensaje', 'Haz borrado una tarima');
-    this.savePalletLocalStorage();
+    const palletRef = this.palletList.find(pallet=> pallet.idCrypto == idCryptoPallet);
+    if(palletRef){
+      palletRef.sync = false;
+     if(palletRef.id){
+      this.deletePalletList.push(palletRef);
+     }
+      this.palletList = this.palletList.filter(pallet=> pallet.idCrypto != idCryptoPallet);
+      this.messageExit('Mensaje', 'Haz borrado una tarima');
+      this.savePalletLocalStorage();
+    }
+    
    }
    
    messageExit(summary:string, detail:string){
@@ -182,4 +257,45 @@ export class InCoolerComponent {
       detail:detail ,
     })
    }
+
+
+   async syncPallets() {
+    this.loading = true;
+    console.log(this.palletList);
+  
+    const updatePromises = this.palletList.map(async pallet => {
+      if (pallet.id) {
+        await lastValueFrom(this.coolerService.updatePallet(pallet.id, pallet));
+        pallet.sync = true;
+        return;
+      } else {
+        await lastValueFrom(this.coolerService.addPallet(pallet));
+        pallet.sync = true;
+        return;
+      }
+    });
+  
+    const deletePromises = this.deletePalletList.map(pallet => {
+      if (pallet.id) {
+        return lastValueFrom(this.coolerService.deletePallet(pallet.id))
+          .then(() => this.deletePalletList = this.deletePalletList.filter(p => p.id !== pallet.id));
+      }
+      return;
+    });
+  
+    try {
+      await Promise.all([...updatePromises, ...deletePromises]);
+      this.messageExit('Sincronización', 'Se han sincronizado los elementos');
+    } catch (error) {
+      // const palletWithError = this.palletList.find(p => p.numberPallet === error.pallet?.numberPallet) || this.deletePalletList.find(p => p.numberPallet === error.pallet?.numberPallet);
+      // const message = `Error al sincronizar en la tarima: ${palletWithError?.numberPallet ?? palletWithError?.idCrypto}`;
+      this.messageError('Sync', 'Error al sincroniza');
+      console.error(error);
+    } finally {
+      this.loading = false;
+      this.savePalletLocalStorage();
+    }
+  }
+
+
 }

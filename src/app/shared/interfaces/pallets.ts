@@ -1,5 +1,6 @@
 import { ReceptionProduct } from "./reception-product"
 import { Product } from "./product"
+import { Timestamp } from "rxjs"
 
 export interface Pallets {
     id?:string,
@@ -12,5 +13,7 @@ export interface Pallets {
     totalBox?:number,
     totalMaterial?: number
     date?:Date,
-    createAt:Date,
+    // createAt:Timestamp,
+    // updatedAt:Timestamp,
+    sync:boolean,
 }

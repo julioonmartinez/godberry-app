@@ -80,7 +80,7 @@ export const CLIENTS: Customer[] = [
     { id: '75', name: 'Ramón Ortega', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '76', name: 'Ricardo Hinojosa', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '77', name: 'Rojo', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
-    { id: '78', name: 'piña', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '78', name: 'Piña', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '79', name: 'Fernando Campos', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '80', name: 'Salitre', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '81', name: 'Benjamin Razo', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
@@ -90,6 +90,10 @@ export const CLIENTS: Customer[] = [
     { id: '85', name: 'Miriam Solis', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '86', name: 'Proveedor Minijabas', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
     { id: '87', name: 'Edgar Oregel', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '88', name: 'DM', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '89', name: 'Juan Martinez', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '90', name: 'Mariscal', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
+    { id: '87', name: 'Alicia Dueñas', type: 'sender', email: 'adriana.rufino@example.com', phone: '901-234-5670' },
 
 
 

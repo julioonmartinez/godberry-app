@@ -1,5 +1,5 @@
 import { Component, effect, EventEmitter, Input, Output, signal, Signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { sign } from 'crypto';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -29,6 +29,9 @@ export class DialogAddProductComponent {
   @Input() editProduct : ReceptionProduct | undefined = undefined;
   @Output() changeVisible = new EventEmitter<boolean>();
   @Output() addProduct = new EventEmitter<ReceptionProduct>();
+
+  otherSenderControl = new FormControl('');
+  otherAddressControl = new FormControl('');
   
 
   customers: Customer[] = CLIENTS;
@@ -38,7 +41,8 @@ export class DialogAddProductComponent {
   myForm: FormGroup | null = null;
 
  
-
+  nameOtherClientAdress: string | undefined  = undefined; 
+  nameOtherClienteSender: string | undefined = undefined;
   products:Product[] = PRODUCTS;
   filteredCProducts: Product[] =[];
 
@@ -50,12 +54,36 @@ export class DialogAddProductComponent {
   ){
     this.buildForm();
 
+    this.otherSenderControl.valueChanges.subscribe(value => {
+      const currentSender = this.myForm?.get('clientSender')?.value;
+      if (currentSender?.id === '0') {
+        this.myForm?.patchValue({
+          clientSender: {
+            ...currentSender,
+            name: value
+          }
+        }, { emitEvent: false });
+      }
+    });
+
+    this.otherAddressControl.valueChanges.subscribe(value => {
+      const currentAddress = this.myForm?.get('clientAdress')?.value;
+      if (currentAddress?.id === '0') {
+        this.myForm?.patchValue({
+          clientAdress: {
+            ...currentAddress,
+            name: value
+          }
+        }, { emitEvent: false });
+      }
+    });
     effect(()=>{
       if(this.editProduct){
         this.buildForm()
       }
-    })
-  
+    });
+
+    
    
   }
 
@@ -66,15 +94,33 @@ export class DialogAddProductComponent {
         amount: [this.editProduct.amount, Validators.required],
         clientAdress: [this.editProduct.clientAdress, Validators.required],
         clientSender: [this.editProduct.clientSender, Validators.required],
-      })
-    }else{
+      });
+      
+     
+      if (this.editProduct.clientSender.id === '0') {
+        this.otherSenderControl.setValue(this.editProduct.clientSender.name);
+      }
+      if (this.editProduct.clientAdress.id === '0') {
+        this.otherAddressControl.setValue(this.editProduct.clientAdress.name);
+      }
+    } else {
       this.myForm = this.formBuilder.group({
         product: ['', Validators.required],
         amount: ['', Validators.required],
-        clientAdress: ['', Validators.required],
-        clientSender: ['', Validators.required],
-      })
+        clientAdress: [null, Validators.required],
+        clientSender: [null, Validators.required],
+      });
     }
+  }
+  updateSenderName(event: any) {
+    const value = event.target.value;
+    const currentSender = this.myForm?.get('clientSender')?.value;
+    this.myForm?.patchValue({
+      clientSender: {
+        ...currentSender,
+        name: value
+      }
+    });
   }
 
   closeDialog() {
@@ -107,6 +153,7 @@ export class DialogAddProductComponent {
           idCrypto: this.editProduct.idCrypto,
           ...this.myForm.value
         };
+        // receptionProduct = this.changeNameOtherClient(receptionProduct)
         this.addProduct.emit(receptionProduct);
         this.buildForm();
         this.closeDialog();
@@ -135,6 +182,17 @@ export class DialogAddProductComponent {
 
   messageError(summary:string, detail:string){
     this.messageService.add({severity:'warn', summary:summary, detail: detail})
+  }
+
+  changeNameOtherClient(receptionProduct: ReceptionProduct){
+    if(receptionProduct.clientAdress.id === '0'){
+      receptionProduct.clientAdress.name = this.nameOtherClientAdress ?? 'Sin nombre';
+    }
+
+    if(receptionProduct.clientSender.id === '0'){
+      receptionProduct.clientSender.name = this.nameOtherClienteSender ?? 'Sin nombre';
+    }
+    return receptionProduct
   }
 
 

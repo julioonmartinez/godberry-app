@@ -1,8 +1,13 @@
+<div class="content-progress-bar">
+    @if(loading){
+        <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" />
+    }
+</div>
 <div class="content-page-cooler ">
     <section class="section-header" >
         <!-- <p class="title-page" >Hola</p> -->
-        <p-button label="Sincronizar" icon="pi pi-sync" [style]="{color: 'white'}" severity="secondary" ></p-button>
-        <p-button (onClick)="quicklyAddNewPallet()" label="Tarima" icon="pi pi-plus" size="large" [style]="{color: 'white' }" severity="primary" ></p-button>
+        <p-button [disabled]="loading" (onClick)="syncPallets()" label="Sincronizar" icon="pi pi-sync" [style]="{color: 'white'}" severity="secondary" ></p-button>
+        <p-button [disabled]="loading" (onClick)="quicklyAddNewPallet()" label="Tarima" icon="pi pi-plus" size="large" [style]="{color: 'white' }" severity="primary" ></p-button>
     </section>
     @if(palletList.length > 0){
         <section class="list-cooler" >
@@ -13,16 +18,17 @@
                             <i 
                                 class="pi pi-sync"
                                 style="font-size: 1rem"
-                                [ngClass]="{'async': pallet.id }"
+                                [ngClass]="{'async': pallet.sync }"
                                 ></i>
-                            <p class="title" > {{pallet.numberPallet == undefined ? 'Tarima sin asignar' : 'Tarima: ' + pallet.numberPallet}} </p>
+                            <p class="title" > {{pallet.numberPallet == undefined ? 'Sin asignar' : 'Tarima: ' + pallet.numberPallet}} </p>
                         </div>
                         <div class="content-actions">
                             <p-button (onClick)="openDialogProduct(pallet.idCrypto! )" label="Product" icon="pi pi-plus" [style]="{color: 'white' }"  size="small" severity="secondary"   ></p-button>
                             <div class="card flex justify-content-center">
                                 <p-overlayPanel #menu (onShow)="currentPalletId = pallet.idCrypto">
                                     <p-button 
-                                        icon="pi pi-pencil" 
+                                        icon="pi pi-pencil"
+                                        [disabled]="loading" 
                                         [text]="true"
                                         severity="secondary"
                                         size="small"
@@ -32,6 +38,7 @@
                                         icon="pi pi-trash" 
                                         [text]="true"
                                         severity="danger"
+                                        [disabled]="loading"
                                         size="small"
                                         (click)="deletePallet(currentPalletId!); menu.hide()">
                                     </p-button>
@@ -59,8 +66,8 @@
                                     <p class="row">{{product.amount}}</p>
                                     <p class="row" >{{product.product.genericName}}</p>
                                     <div class="content-action">
-                                        <p-button severity="danger" size="small" [text]="true" icon="pi pi-trash" (onClick)="deleteProduct(pallet.idCrypto!, product.idCrypto!)" ></p-button>
-                                    <p-button size="small" icon="pi pi-pencil" [text]="true"  (onClick)="openDialogProduct(pallet.idCrypto!,product )" ></p-button>
+                                        <p-button [disabled]="loading" severity="danger" size="small" [text]="true" icon="pi pi-trash" (onClick)="deleteProduct(pallet.idCrypto!, product.idCrypto!)" ></p-button>
+                                    <p-button [disabled]="loading" size="small" icon="pi pi-pencil" [text]="true"  (onClick)="openDialogProduct(pallet.idCrypto!,product )" ></p-button>
                                     </div>
                                 </div>
                             }
